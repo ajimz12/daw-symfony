@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game{% endblock %}
+
+{% block body %}
+    <h1>Juego {{ game.id }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Estado</th>
+                <td>{{ game.status }}</td>
+            </tr>
+            <tr>
+                <th>Resultado</th>
+                {% if game.result %}
+                    <td>{{ game.result }}</td>
+                {% else %}
+                    <td>En espera</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Tu Carta</th>
+                {% if game.playerOne and game.playerOne.id == app.user.id %}
+                    <td>{{ game.playerOneCard.number }} de {{ game.playerOneCard.suit }}</td>
+                {% elseif game.playerTwo and game.playerTwo.id == app.user.id %}
+                    <td>{{ game.playerTwoCard.number }} de {{ game.playerTwoCard.suit }}</td>
+                {% else %}
+                    <td>Sin elegir</td>
+                {% endif %}
+            </tr>
+            {% if game.status == "closed" and game.playerOneCard and game.playerTwoCard %}
+                <tr>
+                    <th>Carta de tu rival</th>
+                    {% if game.playerOne and game.playerOne.id == app.user.id %}
+                        <td>{{ game.playerTwoCard.number }} de {{ game.playerTwoCard.suit }}</td>
+                    {% elseif game.playerTwo and game.playerTwo.id == app.user.id %}
+                        <td>{{ game.playerOneCard.number }} de {{ game.playerOneCard.suit }}</td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    {% if game.playerOne and game.playerOne.id != app.user.id %}
+        <h3>Tu rival es <b>{{ game.playerOne.username }}</b></h3>
+    {% elseif game.playerTwo %}
+        <h3>Tu rival es <b>{{ game.playerTwo.username }}</b></h3>
+    {% endif %}
+
+    {% if game.playerOne and game.playerOne.id != app.user.id and game.status != "closed" %}
+        <h2>Elige una carta</h2>
+        <h3><a href="{{ path('app_game_select', {'id': card1.id}) }}">{{ card1.number }} de {{ card1.suit }}</a></h3>
+        <h3><a href="{{ path('app_game_select', {'id': card2.id}) }}">{{ card2.number }} de {{ card2.suit }}</a></h3>
+    {% endif %}
+
+    <a href="{{ path('app_main') }}">Volver</a>
+{% endblock %}
