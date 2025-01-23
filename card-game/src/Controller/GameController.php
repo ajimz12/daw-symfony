@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 
 #[Route('/game')]
@@ -40,49 +39,52 @@ final class GameController extends AbstractController
             return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $cards = $cardRepository->findAll();
-        shuffle(array: $cards);
-        $card1 = $cards[0];
-        shuffle(array: $cards);
-        $card2 = $cards[0];
+        $allCards = $cardRepository->findAll();
+        shuffle(array: $allCards);
+        $cards = array_slice($allCards, 0, 4);
 
         return $this->render('game/new.html.twig', [
             'game' => $game,
             'form' => $form,
-            'card1' => $card1,
-            'card2' => $card2,
+            'cards' => $cards,
         ]);
     }
 
-    #[Route('/select/{id}', name: 'app_game_select', methods: ['GET'])]
+    #[Route('/select', name: 'app_game_select', methods: ['POST'])]
     public function selectCard(
-        int $id,
+        Request $request,
         CardRepository $cardRepository,
         EntityManagerInterface $entityManager,
         Security $security
     ): Response {
         $currentUser = $security->getUser();
-        $selectedCard = $cardRepository->find($id);
+
+        $selectedCardIds = $request->get('cards', []);
+        $selectedCards = $cardRepository->findBy(['id' => $selectedCardIds]);
 
         $game = $entityManager->getRepository(Game::class)->findOneBy(['status' => 'open']);
+
         if ($game) {
             $game->setPlayerTwo($currentUser);
-            $game->setPlayerTwoCard($selectedCard);
+            $game->setPlayerTwoCard($selectedCards[0]);
+            $game->setPlayerTwoSecondCard($selectedCards[1]);
             $game->setStatus('closed');
 
             $this->checkResult($game);
-            $entityManager->flush();
         } else {
             $game = new Game();
-            $game->setPlayerOneCard($selectedCard);
-            $game->setStatus('open');
             $game->setPlayerOne($currentUser);
+            $game->setPlayerOneCard($selectedCards[0]);
+            $game->setPlayerOneSecondCard($selectedCards[1]);
+            $game->setStatus('open');
             $entityManager->persist($game);
-            $entityManager->flush();
         }
+
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_game_show', ['id' => $game->getId()]);
     }
+
 
     public function checkResult($game)
     {
@@ -113,13 +115,11 @@ final class GameController extends AbstractController
 
         shuffle($availableCards);
 
-        $card1 = $availableCards[0];
-        $card2 = $availableCards[1];
+        $availableCards = array_slice($availableCards, 0, 4);
 
         return $this->render('game/show.html.twig', [
             'game' => $game,
-            'card1' => $card1,
-            'card2' => $card2,
+            'cards' => $availableCards,
         ]);
     }
 

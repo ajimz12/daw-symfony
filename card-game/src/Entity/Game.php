@@ -34,6 +34,12 @@ class Game
     #[ORM\ManyToOne(inversedBy: 'winnedGames')]
     private ?User $winner = null;
 
+    #[ORM\ManyToOne]
+    private ?Card $playerOneSecondCard = null;
+
+    #[ORM\ManyToOne]
+    private ?Card $playerTwoSecondCard = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +125,30 @@ class Game
     public function setWinner(?User $winner): static
     {
         $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getPlayerOneSecondCard(): ?Card
+    {
+        return $this->playerOneSecondCard;
+    }
+
+    public function setPlayerOneSecondCard(?Card $playerOneSecondCard): static
+    {
+        $this->playerOneSecondCard = $playerOneSecondCard;
+
+        return $this;
+    }
+
+    public function getPlayerTwoSecondCard(): ?Card
+    {
+        return $this->playerTwoSecondCard;
+    }
+
+    public function setPlayerTwoSecondCard(?Card $playerTwoSecondCard): static
+    {
+        $this->playerTwoSecondCard = $playerTwoSecondCard;
 
         return $this;
     }
