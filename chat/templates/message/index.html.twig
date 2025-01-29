@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message index{% endblock %}
+
+{% block body %}
+    <h1>Chat</h1>
+
+    <table class="table">
+        <tbody>
+        {% for message in messages %}
+            <tr>
+                <td><strong>{{ message.user.username }}: </strong> &nbsp;&nbsp;</td>
+                <td>{{ message.text }} &nbsp;&nbsp;</td>
+                <td>{{ message.date ? message.date|date('Y-m-d H:i') : '' }} &nbsp;&nbsp;</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">No messages found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ form_start(form) }}
+        <div>
+            {{ form_widget(form.text, {'attr': {'placeholder': 'Escribe tu mensaje...'}}) }}
+        </div>
+        <button class="btn btn-primary">Send</button>
+    {{ form_end(form) }}
+{% endblock %}
