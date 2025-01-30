@@ -43,6 +43,26 @@ final class ChatGroupController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/join', name: 'app_chat_group_join', methods: ['POST'])]
+    public function joinUser(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $id = $request->get('id');
+        $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
+        $chatGroup->addUsuario($this->getUser());
+        $entityManager->flush();
+        return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    // #[Route('/{id}/close', name: 'app_chat_group_close', methods: ['POST'])]
+    // public function closeGroup(Request $request, EntityManagerInterface $entityManager): Response
+    // {
+    //     $id = $request->get('id');
+    //     $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
+    //     $chatGroup->setAbierto(false);
+    //     $entityManager->flush();
+    //     return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
+    // }
+
     #[Route('/{id}', name: 'app_chat_group_show', methods: ['GET'])]
     public function show(ChatGroup $chatGroup): Response
     {
@@ -72,7 +92,7 @@ final class ChatGroupController extends AbstractController
     #[Route('/{id}', name: 'app_chat_group_delete', methods: ['POST'])]
     public function delete(Request $request, ChatGroup $chatGroup, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$chatGroup->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $chatGroup->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($chatGroup);
             $entityManager->flush();
         }
