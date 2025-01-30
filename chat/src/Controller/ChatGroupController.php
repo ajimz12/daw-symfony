@@ -43,7 +43,7 @@ final class ChatGroupController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/join', name: 'app_chat_group_join', methods: ['POST'])]
+    #[Route('/{id}/join', name: 'app_chat_group_join', methods: ['GET'])]
     public function joinUser(Request $request, EntityManagerInterface $entityManager): Response
     {
         $id = $request->get('id');
@@ -69,6 +69,7 @@ final class ChatGroupController extends AbstractController
         return $this->render('chat_group/show.html.twig', [
             'chat_group' => $chatGroup,
             'messages' =>  $chatGroup->getMessage(),
+            'id' => $chatGroup->getId(),
         ]);
     }
 
