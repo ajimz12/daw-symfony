@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Participantes{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_chat_group_show', {'id': id}) }}">Volver</a><br>
+    <h1>Participantes de {{ chat_group.name }}</h1>
+
+    {% for participante in participantes %}
+    <div class="alert alert-info" role="alert">
+        <tr>
+            <td><strong>{{ participante.username }} </strong></td><br>
+        </tr>
+    </div>
+    {% endfor %}
+
+
+    <a href="{{ path('app_chat_group_salir', {'id': id}) }}">Salir</a>
+
+    
+{% endblock %}

@@ -58,6 +58,17 @@ final class ChatGroupController extends AbstractController
         ]);
     }
 
+    #[Route('/salir', name: 'app_chat_group_salir', methods: ['GET'])]
+    public function salir(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $id = $request->get('id');
+        $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
+        $chatGroup->removeUsuario($this->getUser());
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
+    }
+
     // #[Route('/{id}/close', name: 'app_chat_group_close', methods: ['POST'])]
     // public function closeGroup(Request $request, EntityManagerInterface $entityManager): Response
     // {
@@ -77,6 +88,17 @@ final class ChatGroupController extends AbstractController
             'id' => $chatGroup->getId(),
         ]);
     }
+
+    #[Route('/participantes/{id}', name: 'app_chat_group_list', methods: ['GET'])]
+    public function list(ChatGroup $chatGroup): Response
+    {
+        return $this->render('chat_group/list.html.twig', [
+            'chat_group' => $chatGroup,
+            'participantes' => $chatGroup->getUsuarios(),
+            'id' => $chatGroup->getId(),
+        ]);
+    }
+    
 
     #[Route('/{id}/edit', name: 'app_chat_group_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ChatGroup $chatGroup, EntityManagerInterface $entityManager): Response

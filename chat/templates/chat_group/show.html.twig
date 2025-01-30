@@ -3,7 +3,7 @@
 {% block title %}ChatGroup{% endblock %}
 
 {% block body %}
-    <a href="{{ path('app_main') }}">Volver</a>
+    <a href="{{ path('app_main') }}">Volver</a>&nbsp;&nbsp;<a href="{{ path('app_chat_group_list', {'id': id}) }}">Participantes</a>
     <h1>{{ chat_group.name }}</h1>
 
     {% for message in messages %}
