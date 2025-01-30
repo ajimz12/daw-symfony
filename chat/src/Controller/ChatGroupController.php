@@ -32,9 +32,10 @@ final class ChatGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($chatGroup);
             $chatGroup->setCreador($this->getUser());
+            $chatGroup->setStatus('abierto');
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('chat_group/new.html.twig', [
@@ -50,7 +51,11 @@ final class ChatGroupController extends AbstractController
         $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
         $chatGroup->addUsuario($this->getUser());
         $entityManager->flush();
-        return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('chat_group/show.html.twig', [
+            'chat_group' => $chatGroup,
+            'messages' =>  $chatGroup->getMessage(),
+            'id' => $chatGroup->getId(),
+        ]);
     }
 
     // #[Route('/{id}/close', name: 'app_chat_group_close', methods: ['POST'])]
