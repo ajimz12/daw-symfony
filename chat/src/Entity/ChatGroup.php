@@ -33,6 +33,9 @@ class ChatGroup
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'chatGroup')]
     private Collection $message;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
     public function __construct()
     {
         $this->usuarios = new ArrayCollection();
@@ -118,6 +121,18 @@ class ChatGroup
                 $message->setChatGroup(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
