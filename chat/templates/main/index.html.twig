@@ -8,9 +8,14 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+
+    
+
 <div class="example-wrapper">
     <h1>Bienvenido</h1>
-    <a href="{{ path('app_message_index') }}">Ver todos los mensajes</a>
+    <a href="{{ path('app_message_index') }}">Ver chat general</a><br>
+    <a href="{{ path('app_chat_group_new') }}">Crear chat grupal</a><br>
+    <a href="{{ path('app_login') }}">Iniciar Sesión</a>
   
 </div>
 {% endblock %}

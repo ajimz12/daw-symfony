@@ -41,9 +41,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'user')]
     private Collection $messages;
 
+    /**
+     * @var Collection<int, ChatGroup>
+     */
+    #[ORM\OneToMany(targetEntity: ChatGroup::class, mappedBy: 'creador')]
+    private Collection $chatGroups;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->chatGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,6 +151,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($message->getUser() === $this) {
                 $message->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChatGroup>
+     */
+    public function getChatGroups(): Collection
+    {
+        return $this->chatGroups;
+    }
+
+    public function addChatGroup(ChatGroup $chatGroup): static
+    {
+        if (!$this->chatGroups->contains($chatGroup)) {
+            $this->chatGroups->add($chatGroup);
+            $chatGroup->setCreador($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChatGroup(ChatGroup $chatGroup): static
+    {
+        if ($this->chatGroups->removeElement($chatGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($chatGroup->getCreador() === $this) {
+                $chatGroup->setCreador(null);
             }
         }
 

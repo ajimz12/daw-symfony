@@ -23,6 +23,9 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'message')]
+    private ?ChatGroup $chatGroup = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Message
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getChatGroup(): ?ChatGroup
+    {
+        return $this->chatGroup;
+    }
+
+    public function setChatGroup(?ChatGroup $chatGroup): static
+    {
+        $this->chatGroup = $chatGroup;
 
         return $this;
     }
