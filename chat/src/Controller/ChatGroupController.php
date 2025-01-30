@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\ChatGroup;
+use App\Entity\Message;
 use App\Form\ChatGroupType;
+use App\Form\MessageType;
 use App\Repository\ChatGroupRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,11 +54,7 @@ final class ChatGroupController extends AbstractController
         $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
         $chatGroup->addUsuario($this->getUser());
         $entityManager->flush();
-        return $this->render('chat_group/show.html.twig', [
-            'chat_group' => $chatGroup,
-            'messages' =>  $chatGroup->getMessage(),
-            'id' => $chatGroup->getId(),
-        ]);
+        return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/salir', name: 'app_chat_group_salir', methods: ['GET'])]
@@ -79,13 +78,29 @@ final class ChatGroupController extends AbstractController
     //     return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
     // }
 
-    #[Route('/{id}', name: 'app_chat_group_show', methods: ['GET'])]
-    public function show(ChatGroup $chatGroup): Response
+    #[Route('/{id}', name: 'app_chat_group_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, ChatGroup $chatGroup, EntityManagerInterface $entityManager): Response
     {
+        $message = new Message();
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $message->setDate(new DateTime());
+            $message->setUser($this->getUser());
+            $message->setChatGroup($chatGroup);
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_chat_group_show', ['id' => $chatGroup->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('chat_group/show.html.twig', [
             'chat_group' => $chatGroup,
             'messages' =>  $chatGroup->getMessage(),
+            'usuarios' => $chatGroup->getUsuarios(),
             'id' => $chatGroup->getId(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -98,7 +113,7 @@ final class ChatGroupController extends AbstractController
             'id' => $chatGroup->getId(),
         ]);
     }
-    
+
 
     #[Route('/{id}/edit', name: 'app_chat_group_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ChatGroup $chatGroup, EntityManagerInterface $entityManager): Response

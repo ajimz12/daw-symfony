@@ -16,8 +16,15 @@
     </div>
     {% endfor %}
 
+    {% if app.user not in usuarios %}
+        <a href="{{ path('app_chat_group_join', {'id': id}) }}" class="btn btn-success">Unirme</a>
+    {% else %}
+        {{ form_start(form) }}
+            <div>
+                {{ form_widget(form.text, {'attr': {'placeholder': 'Escribe tu mensaje...'}}) }}
+            </div>
+            <button class="btn btn-primary">Enviar</button>
+        {{ form_end(form) }}
+    {% endif %}
 
-    <a href="{{ path('app_chat_group_join', {'id': id}) }}">Unirme</a>
-
-    
 {% endblock %}
