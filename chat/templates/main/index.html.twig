@@ -6,6 +6,7 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    
 </style>
 
 
@@ -15,7 +16,16 @@
     <h1>Bienvenido</h1>
     <a href="{{ path('app_message_index') }}">Ver chat general</a><br>
     <a href="{{ path('app_chat_group_new') }}">Crear chat grupal</a><br>
-    <a href="{{ path('app_login') }}">Iniciar Sesión</a>
+    <a href="{{ path('app_login') }}">Iniciar Sesión</a><br><br>
+
+    <h2>Listas de chat grupales:</h2>
+
+    {% for chat_group in chat_groups %}
+    <p>
+        <a href="{{ path('app_chat_group_show', {'id': chat_group.id}) }}">{{ chat_group.name }}</a>
+    </p>
+    {% endfor %}
   
 </div>
+
 {% endblock %}

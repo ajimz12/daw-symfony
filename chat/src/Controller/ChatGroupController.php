@@ -68,6 +68,7 @@ final class ChatGroupController extends AbstractController
     {
         return $this->render('chat_group/show.html.twig', [
             'chat_group' => $chatGroup,
+            'messages' =>  $chatGroup->getMessage(),
         ]);
     }
 

@@ -22,5 +22,15 @@
 
     <a href="{{ path('app_chat_group_edit', {'id': chat_group.id}) }}">edit</a>
 
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        <tr>
+            <td><strong>{{ message.user.username }}: </strong> &nbsp;&nbsp;</td>
+            <td>{{ message.text }} &nbsp;&nbsp;</td>
+            <td>{{ message.date ? message.date|date('Y-m-d H:i') : '' }} &nbsp;&nbsp;</td>        
+        </tr>
+    </div>
+    {% endfor %}
+
     {{ include('chat_group/_delete_form.html.twig') }}
 {% endblock %}
