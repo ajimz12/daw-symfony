@@ -1,0 +1,63 @@
+Decidimos hacer una aplicación para organizar "amigo invisible"
+
+Necesitamos recoger usuarios, que se han registrado en el sistema y entre todos ellos repartir aleatoriamente a quién le debe regalar cada uno.
+
+De cada "sorteo" vamos a recoger el presupuesto del regalo y la fecha en la que se va a dar.
+
+Tras hacer el sorteo debe aparecer una notificación a cada usuario de quién le ha tocado.
+º
+---- Hasta aqui un 5
+
+Se puede definir que un participante no le regale a otro participante. 
+
+---- Hasta aqui un 6
+
+Crear grupos de amigos para los sorteos. Un usuario puede crear un grupo de amigos e invitar a otros usuarios. Esos usuarios reciben una notificación (indicando quién la envía) y deben aceptar o declinar la invitación.
+
+Habrá un buscador de usuarios que nos permite agregar al grupo.
+
+Podremos hacer sorteos sobre el grupo de amigos (solo para los que han aceptado).
+
+---- Hasta aqui un 10
+
+extra para estrellita:
+
+Cada usuario tiene un histórico de sorteos. Deben salir los que aún no han acabado de forma destacada por un lado y por otro los que ya han pasado.
+
+Entidad-Relación:
+
+Usuarios:
+- id (PK)
+- nombre
+- email
+- contraseña
+
+Sorteos:
+- id (PK)
+- presupuesto
+- fecha
+- creador_id (FK a Usuarios, relación muchos a uno)
+
+Participantes:
+- id (PK)
+- sorteo_id (FK a Sorteos, relación muchos a uno)
+- usuario_id (FK a Usuarios, relación muchos a uno)
+- destinatario_id (FK a Usuarios, puede ser NULL, relación muchos a uno)
+- notificado (boolean)
+
+Grupos:
+- id (PK)
+- nombre
+- creador_id (FK a Usuarios, relación muchos a uno)
+
+Grupo_Usuarios:
+- id (PK)
+- grupo_id (FK a Grupos, relación muchos a uno)
+- usuario_id (FK a Usuarios, relación muchos a uno)
+- estado (pendiente, aceptado, rechazado)
+
+Historial_Sorteos:
+- id (PK)
+- usuario_id (FK a Usuarios, relación muchos a uno)
+- sorteo_id (FK a Sorteos, relación muchos a uno)
+- estado (activo, finalizado)

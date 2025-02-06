@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Raffle{% endblock %}
+
+{% block body %}
+    <h1>Edit Raffle</h1>
+
+    {{ include('raffle/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_raffle_index') }}">back to list</a>
+
+    {{ include('raffle/_delete_form.html.twig') }}
+{% endblock %}

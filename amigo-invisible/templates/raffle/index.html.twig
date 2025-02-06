@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raffle index{% endblock %}
+
+{% block body %}
+    <h1>Raffle index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Budget</th>
+                <th>Date</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for raffle in raffles %}
+            <tr>
+                <td>{{ raffle.id }}</td>
+                <td>{{ raffle.budget }}</td>
+                <td>{{ raffle.date ? raffle.date|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_raffle_show', {'id': raffle.id}) }}">show</a>
+                    <a href="{{ path('app_raffle_edit', {'id': raffle.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_raffle_new') }}">Create new</a>
+{% endblock %}

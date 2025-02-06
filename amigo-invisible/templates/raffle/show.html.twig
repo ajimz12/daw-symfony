@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raffle{% endblock %}
+
+{% block body %}
+    <h1>Raffle</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Presupuesto</th>
+                <td>{{ raffle.budget }}€</td>
+            </tr>
+            <tr>
+                <th>Fecha</th>
+                <td>{{ raffle.date ? raffle.date|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Participantes</h2>
+    {% for participant in raffle.participants %}
+    <p>{{ participant.user.username }}</p>
+    {% endfor %}
+
+    <hr>
+
+        <p>Te ha tocado {{ addressee }}</p>
+
+
+    <a href="{{ path('app_main') }}">Volver al inicio</a>
+{% endblock %}

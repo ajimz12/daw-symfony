@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Raffle{% endblock %}
+
+{% block body %}
+    <h1>Crear Sorteo</h1>
+
+    {{ include('raffle/_form.html.twig') }}
+
+    <a href="{{ path('app_main') }}">Volver al inicio</a>
+{% endblock %}
