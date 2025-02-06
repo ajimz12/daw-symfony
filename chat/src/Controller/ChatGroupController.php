@@ -35,6 +35,7 @@ final class ChatGroupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($chatGroup);
             $chatGroup->setCreador($this->getUser());
+            $chatGroup->addUsuario($this->getUser());
             $chatGroup->setStatus('abierto');
             $entityManager->flush();
 
@@ -63,20 +64,14 @@ final class ChatGroupController extends AbstractController
         $id = $request->get('id');
         $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
         $chatGroup->removeUsuario($this->getUser());
+        
+        if ($chatGroup->getUsuarios()->count() == 0) {
+            $chatGroup->setStatus("cerrado");
+        }
+        
         $entityManager->flush();
-
         return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
     }
-
-    // #[Route('/{id}/close', name: 'app_chat_group_close', methods: ['POST'])]
-    // public function closeGroup(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $id = $request->get('id');
-    //     $chatGroup = $entityManager->getRepository(ChatGroup::class)->find($id);
-    //     $chatGroup->setAbierto(false);
-    //     $entityManager->flush();
-    //     return $this->redirectToRoute('app_chat_group_index', [], Response::HTTP_SEE_OTHER);
-    // }
 
     #[Route('/{id}', name: 'app_chat_group_show', methods: ['GET', 'POST'])]
     public function show(Request $request, ChatGroup $chatGroup, EntityManagerInterface $entityManager): Response

@@ -14,17 +14,25 @@
 
 <div class="example-wrapper">
     <h1>Bienvenido</h1>
+    {% if is_granted("ROLE_USER") %}
     <a href="{{ path('app_message_index') }}">Ver chat general</a><br>
     <a href="{{ path('app_chat_group_new') }}">Crear chat grupal</a><br>
+    {% endif %}
     <a href="{{ path('app_login') }}">Iniciar Sesión</a><br><br>
 
+        {% if is_granted("ROLE_USER") %}
     <h2>Listas de chat grupales:</h2>
-
     {% for chat_group in chat_groups %}
     <p>
+    {% if chat_group.status == "abierto" %}
         <a href="{{ path('app_chat_group_show', {'id': chat_group.id}) }}">{{ chat_group.name }}</a>
+    {% endif %}
     </p>
+
     {% endfor %}
+
+{% endif %}
+
   
 </div>
 
